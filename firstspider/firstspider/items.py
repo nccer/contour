@@ -7,8 +7,21 @@
 
 import scrapy
 
+class ProductItem(scrapy.Item):
+    englishName = scrapy.Field()
+    chineseName = scrapy.Field()
+    casNumber = scrapy.Field()
 
-class FirstspiderItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+
+class SupplierItem(scrapy.Item):
+    supplier = scrapy.Field()
+    product = scrapy.Field()
+    tel = scrapy.Field()
+    fax = scrapy.Field()
+    email = scrapy.Field()
+    website = scrapy.Field()
+
+
+class GoldProductItem(scrapy.Item):
+    supplier = scrapy.Field()
+    product = scrapy.Field()

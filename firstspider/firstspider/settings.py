@@ -51,6 +51,7 @@ NEWSPIDER_MODULE = 'firstspider.spiders'
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
 #    'firstspider.middlewares.MyCustomDownloaderMiddleware': 543,
+#    'firstspider.middlewares.CustomHttpProxyMiddleware': 500
 #}
 
 # Enable or disable extensions
@@ -61,9 +62,9 @@ NEWSPIDER_MODULE = 'firstspider.spiders'
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'firstspider.pipelines.SomePipeline': 300,
-#}
+ITEM_PIPELINES = {
+    'firstspider.pipelines.DuplicatesPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
