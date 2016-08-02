@@ -15,7 +15,6 @@ class ProductItem(scrapy.Item):
 
 class SupplierItem(scrapy.Item):
     supplier = scrapy.Field()
-    product = scrapy.Field()
     tel = scrapy.Field()
     fax = scrapy.Field()
     email = scrapy.Field()
