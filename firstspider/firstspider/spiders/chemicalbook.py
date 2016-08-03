@@ -2,8 +2,8 @@
 import scrapy
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
-
-from firstspider.items import ProductItem, SupplierItem, GoldProductItem
+from scrapy.selector import Selector
+from firstspider.items import ProductItem, SupplierItem, GoldProductItem, SupplierProductItem, MolItem
 
 
 class ChemicalbookSpider(CrawlSpider):
@@ -19,19 +19,29 @@ class ChemicalbookSpider(CrawlSpider):
     )
 
     def parse_product(self, response):
-	i = ProductItem()
+	productItem = ProductItem()
+        supplierProductItem = SupplierProductItem()
+
 	englishNames = response.xpath(u"//table/descendant::*[@align='left'][@width='46%'][position()>1]/a/text()").extract()
 	chineseNames = response.xpath(u"//table/descendant::*[@align='left'][@width='32%'][position()>1]/text()").extract()
 	casNumbers = response.xpath(u"//table/descendant::*[@align='left'][@width='16%'][position()>1]/text()").extract()
+        supplier = response.xpath(u"//title/text()").re(u".+(?=产品目录)")
+        products = []
 	for englishName, chineseName, casNumber in zip(englishNames, chineseNames, casNumbers):
-	    i['englishName'] = englishName
-	    i['chineseName'] = chineseName
-	    i['casNumber'] = casNumber
-	    yield i
+	    productItem['englishName'] = englishName
+	    productItem['chineseName'] = chineseName
+	    productItem['casNumber'] = casNumber
+            products.append(casNumber)
+	    yield productItem
+        supplierProductItem['supplier'] = supplier[0].strip(' ')
+        supplierProductItem['products'] = products
+        yield supplierProductItem
 
     def parse_supplier(self, response):
 	goldProductItem = GoldProductItem()
 	supplierItem = SupplierItem()
+        molItem = MolItem()
+
 	presentProduct = response.xpath(u"//div[@class='search_from']/input[@type='text']/@value").extract()
 	suppliersWhoProductGoldProduct = response.xpath(u"//font[text() = '黄金产品']/preceding-sibling::a[@onclick]/text()").extract()
 	
@@ -40,6 +50,14 @@ class ChemicalbookSpider(CrawlSpider):
 	faxs = response.xpath(u"//table[@class='ProdGN_4'][@cellpadding='2']/descendant::td[position() = 7]/text()").extract()
 	emails = response.xpath(u"//table[@class='ProdGN_4'][@cellpadding='2']/descendant::td[position() = 9]/text()").extract()
 	websites = response.xpath(u"//table[@class='ProdGN_4'][@cellpadding='2']/descendant::td[position() = 15]/a/text()").extract()
+
+        molURL = Selector(response=response).re(u"\/CAS/mol.+?mol")
+        baseURL = 'http://www.chemicalbook.com'
+        if len(molURL) > 0:
+            mol = baseURL+molURL[0]
+            molItem['mol'] = mol
+            yield molItem
+
 	for supplier, tel, fax, email, website in zip(suppliers, tels, faxs, emails, websites):
 	    supplierItem['supplier'] = supplier
 	    supplierItem['tel'] = tel

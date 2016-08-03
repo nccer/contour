@@ -24,3 +24,12 @@ class SupplierItem(scrapy.Item):
 class GoldProductItem(scrapy.Item):
     supplier = scrapy.Field()
     product = scrapy.Field()
+
+
+class SupplierProductItem(scrapy.Item):
+    supplier = scrapy.Field()
+    products = scrapy.Field()
+
+class MolItem(scrapy.Item):
+    mol = scrapy.Field()
+
