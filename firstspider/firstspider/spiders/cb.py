@@ -12,10 +12,10 @@ class ChemicalbookSpider(CrawlSpider):
     start_urls = ALL_URLS
 
     rules = (
-        Rule(LinkExtractor(allow=r'\/ShowSupplierProductsList\d+\/0\.htm'), callback='parse_product', follow=False),
-        Rule(LinkExtractor(allow=r'\/ProdSupplierGNCB\d+\.htm'), callback='parse_supplier', follow=False),
+        Rule(LinkExtractor(allow=r'\/ShowSupplierProductsList\d+\/0\.htm'), callback='parse_product', follow=True),
+        Rule(LinkExtractor(allow=r'\/ProdSupplierGNCB\d+\.htm'), callback='parse_supplier', follow=True),
         Rule(LinkExtractor(allow=r'\d+.html'), callback='parse_product', follow=True),
-        Rule(LinkExtractor(allow=r'\/ProdSupplierGN\.aspx\?CBNumber=CB\d+\&ProvID\=\d+\&start\=\d+'), callback='parse_supplier', follow=False),
+        Rule(LinkExtractor(allow=r'\/ProdSupplierGN\.aspx\?CBNumber=CB\d+\&ProvID\=\d+\&start\=\d+'), callback='parse_supplier', follow=True),
     )
 
     def parse_product(self, response):
