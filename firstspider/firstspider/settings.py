@@ -51,7 +51,7 @@ COOKIES_ENABLED=False
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    'firstspider.middlewares.middleware.CustomHttpProxyMiddleware': 500,
+#    'firstspider.middlewares.middleware.CustomHttpProxyMiddleware': 500,
     'firstspider.middlewares.middleware.CustomUserAgentMiddleware': 501,
 }
 
