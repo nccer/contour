@@ -51,7 +51,7 @@ COOKIES_ENABLED=False
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-#    'firstspider.middlewares.middleware.CustomHttpProxyMiddleware': 500,
+    'firstspider.middlewares.middleware.CustomHttpProxyMiddleware': 500,
     'firstspider.middlewares.middleware.CustomUserAgentMiddleware': 501,
 }
 
@@ -88,7 +88,7 @@ ITEM_PIPELINES = {
 DOWNLOAD_HANDLERS = {
     's3': None,
 }
-DEPTH_LIMIT = 5
+DEPTH_LIMIT = 6
 DEPTH_STATS = True
 DEPTH_STATS_VERBOSE = True
 RETRY_ENABLED = True

@@ -1,4 +1,4 @@
-from proxy import PROXIES, FREE_PROXIES
+from proxy import PROXIES
 from agents import AGENTS_ALL
 
 import random
