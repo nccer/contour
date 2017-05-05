@@ -104,16 +104,16 @@ void Mythread::tGenerateSDF(QString str1, QString str2, QString str3, QString st
         lostFile.close();
     }
     csv.close();
-//    if(missingFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
-//        QTextStream missingcasStream(&missingFile);
-//        missingcasStream<<QString("本次共导入了")<<missingcasList.count() + this->count + this->successCount<<QString("个分子。");
-//        missingcasStream<<QString("其中，成功")<<this->successCount<<QString("个分子。失败")<< this->count + missingcasList.count()<<QString("个分子。\n");
-//        missingcasStream<<QString("有")<<this->count<<QString("个分子已存在，毋须导入。有")<< missingcasList.count()<<QString("个分子缺少mol文件,列表如下：\n\n");
-//        foreach (QString casNumber, missingcasList) {
-//            missingcasStream<<casNumber<<"\n";
-//        }
-//    }
-//    missingFile.close();
+    if(missingFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
+        QTextStream missingcasStream(&missingFile);
+        missingcasStream<<QString("本次共导入了")<<missingcasList.count() + this->count + this->successCount<<QString("个分子。");
+        missingcasStream<<QString("其中，成功")<<this->successCount<<QString("个分子。失败")<< this->count + missingcasList.count()<<QString("个分子。\n");
+        missingcasStream<<QString("有")<<this->count<<QString("个分子已存在，毋须导入。有")<< missingcasList.count()<<QString("个分子缺少mol文件,列表如下：\n\n");
+        foreach (QString casNumber, missingcasList) {
+            missingcasStream<<casNumber<<"\n";
+        }
+    }
+    missingFile.close();
     this->successCount = 0;
     this->count = 0;
     emit suc("成功生成SDF");
@@ -240,17 +240,23 @@ QStringList Mythread::titleInSDF(QStringList sdfTitleList, QString path) {
         }
         sdf.close();
     }
-    foreach (QString tline, sdfTitleList) {
-        if(tline.at(0) == ">") {
-            QString title = tline.mid(tline.indexOf("<") + 1);
+    foreach (QString sdfLine, sdfTitleList) {
+        if(sdfLine == "") {
+            sdfTitleList.removeOne(sdfLine);
+            continue;
+        }
+        if(sdfLine.at(0) == ">") {
+            QString title = sdfLine.mid(sdfLine.indexOf("<") + 1);
             int i = title.indexOf(">");
-            i -= 1;
             title = title.mid(0, i);
             sdfTitleList.append(title);
-            sdfTitleList.removeOne(tline);
+            sdfTitleList.removeOne(sdfLine);
         } else {
-            sdfTitleList.removeOne(tline);
+            sdfTitleList.removeOne(sdfLine);
         }
+    }
+    foreach (QString astring, sdfTitleList) {
+        qDebug()<<astring;
     }
     return sdfTitleList;
 }
@@ -267,6 +273,9 @@ QStringList Mythread::titleInCSV(QString path) {
             this->titleListInCSV = splitLine(line);
         }
     }
+    foreach (QString astring, titleListInCSV) {
+        qDebug()<<"titleInCsv: "<<astring;
+    }
     return this->titleListInCSV;
 }
 
@@ -274,9 +283,7 @@ void Mythread::run() {
     if(this->isGen) {
         tGenerateSDF(sdfa, sdfcsv, molf, resu);
     } else {
-        qDebug()<<"tmerS";
         tMergeSDF(sdfa, sdfcsv, molf);
-        qDebug()<<"tMere";
     }
 
 }
